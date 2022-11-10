@@ -1,2 +1,7 @@
-# Script
-We make kids script
+# Games
+
+None
+
+# Info
+
+SCRIPT ARE OPEN SOURCED 
