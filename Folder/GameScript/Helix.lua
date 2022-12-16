@@ -372,7 +372,7 @@ if game.PlaceId == SupportedGame.TOH or SupportedGame.pro_TOH or SupportedGame.R
     Info:AddButton({
         Name = "Get Script Source",
         Callback = function()
-            setclipboard("https://discord.gg/2sth67eUH8")
+            setclipboard("https://raw.githubusercontent.com/TryingShomen/Script/main/Folder/GameScript/Helix.lua")
         end    
     })
 else
