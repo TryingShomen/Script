@@ -1,14 +1,9 @@
---[[
-
-  Script made by : Ricardo At School#7261
-
-]]
-
 local SupportedGame = {
     TOH = 1962086868,
     pro_TOH = 3582763398,
     RBBATTLES_TOH = 7227293156,
-    BanLand_TOH = 5253186791
+    BanLand_TOH = 5253186791,
+    Destruction_Sim = 2248408710
 }
 
 if game.PlaceId == SupportedGame.TOH or SupportedGame.pro_TOH or SupportedGame.RBBATTLES_TOH or SupportedGame.BanLand_TOH then
@@ -35,6 +30,7 @@ if game.PlaceId == SupportedGame.TOH or SupportedGame.pro_TOH or SupportedGame.R
     local Jumppowder = Char:FindFirstChild(hm.Name).JumpPower
     local s_Mutator = nil
     local s_Gear = nil
+    local JumpHeight = 50
 
      --// AUTO UPDATE VARIABLES \\
      local X = nil
@@ -69,7 +65,7 @@ if game.PlaceId == SupportedGame.TOH or SupportedGame.pro_TOH or SupportedGame.R
     function HookfunctionKick()
         hookfunction(KickScriptv1.kick,function(...)
             warn("KICK HOOKFUNCTION HAS BEEN ACTIVATED, REMAIN CALM IT WAS STOPPED")
-            return nil;
+            return;
         end)
     end
 
@@ -174,6 +170,10 @@ if game.PlaceId == SupportedGame.TOH or SupportedGame.pro_TOH or SupportedGame.R
     local Bo = Misc:AddSection({
         Name = "Box's"
     })
+    local IJ = player:AddSection({
+        Name = "Infinite Jump"
+    })
+    
 
     --// TOGGLES \\
     FunctionAF:AddToggle({
@@ -281,6 +281,29 @@ if game.PlaceId == SupportedGame.TOH or SupportedGame.pro_TOH or SupportedGame.R
             end
         end    
     })
+    IJ:AddToggle({
+        Name = "Infinite Jump",
+        Default = false,
+        Callback = function(gv)
+            getgenv().infJump = gv
+
+            local UIS = game:GetService("UserInputService")
+
+            UIS.InputBegan:connect(function(UserInput)
+                if getgenv().infJump then
+                    if UserInput.UserInputType == Enum.UserInputType.Keyboard and UserInput.KeyCode == Enum.KeyCode.Space then
+                        Action(Player.Character.Humanoid, function(self)
+                            if self:GetState() == Enum.HumanoidStateType.Jumping or self:GetState() == Enum.HumanoidStateType.Freefall then
+                                Action(self.Parent.HumanoidRootPart, function(self)
+                                        self.Velocity = Vector3.new(0, JumpHeight, 0);
+                                end)
+                            end
+                        end)
+                    end
+                end
+            end)
+        end    
+    })
 
     --// SLIDERS \\
     Chr:AddSlider({
@@ -332,6 +355,18 @@ if game.PlaceId == SupportedGame.TOH or SupportedGame.pro_TOH or SupportedGame.R
             Char:FindFirstChild(tostring(hm)).Health = HP
         end    
     })
+    IJ:AddSlider({
+        Name = "Inf Jump Height",
+        Min = 1,
+        Max = 1000,
+        Default = 50,
+        Color = Color3.fromRGB(255,255,255),
+        Increment = 1,
+        ValueName = "Studs",
+        Callback = function(Value)
+            JumpHeight = Value
+        end    
+    })
 
     --// DROPDOWNS \\
     Mutato:AddDropdown({
@@ -361,7 +396,7 @@ if game.PlaceId == SupportedGame.TOH or SupportedGame.pro_TOH or SupportedGame.R
 
     --// PARAGRAPHS \\
     InformationAF:AddParagraph("Tab Information","I do not know IF you were to die in the middle of farming, I do not know if it will break i'm super lazy to try to fix, I recommend not clicking F9 - Most of the time you wont even collect the Xyles, might work on a fix")
-
+    IJ:AddParagraph("< Information >","I am just way too fucking lazy to start fixing it")
     --// BUTTONS \\
     Info:AddButton({
         Name = "Get Discord",
@@ -372,9 +407,20 @@ if game.PlaceId == SupportedGame.TOH or SupportedGame.pro_TOH or SupportedGame.R
     Info:AddButton({
         Name = "Get Script Source",
         Callback = function()
-            setclipboard("https://raw.githubusercontent.com/TryingShomen/Script/main/Folder/GameScript/Helix.lua")
+            setclipboard("https://discord.gg/2sth67eUH8")
         end    
     })
+
+    --// FINISHING UP \\
+    OrionLib:Init()
+
+elseif game.PlaceId == SupportedGame.Destruction_Sim then
+    local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+    local Window = OrionLib:MakeWindow({Name = "Helix Hub", HidePremium = false, SaveConfig = true, ConfigFolder = "HelixHub-Destruction_Simulator"})
+
+    --// TABS \\
+
+
 else
     game:GetService("Players").LocalPlayer:Kick("UNSUPPORTED GAME DETECTED | ARE YOU SURE THAT YOU JOINED A SUPPORTED GAME?")
 end
